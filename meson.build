@@ -18,7 +18,7 @@ dns_decoder_src = [
 ]
 
 exe = executable('mmdnsd',
-                 ['src/main.cc', src, dns_decoder_src],
+                 ['src/main.cc', dns_decoder_src, src],
                  cpp_args : '-std=c++2a',
                  dependencies : boost_dep)
 
@@ -30,7 +30,7 @@ tests_src = [
 ]
 
 test_exec = executable('mmdnsd_test', 
-                       [src, tests_src],
+                       [src, dns_decoder_src, tests_src],
                        cpp_args : '-std=c++17',
                        dependencies: [
                            gtest_dep,

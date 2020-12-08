@@ -1,19 +1,22 @@
 #pragma once
-#include <cstdint>
 
+#include <cstdint>
+#include <string>
+#include <tuple>
 namespace mmdns::net {
 
 using net_stream_data = uint8_t;
-using net_stream_pointer = uint8_t const*;
+using net_stream_pointer = uint8_t*;
+using const_net_stream_pointer = uint8_t const*;
 
 class net_stream {
  public:
-  net_stream(net_stream_pointer data, const size_t data_size)
+  net_stream(const_net_stream_pointer data, const size_t data_size)
       : data_(data), data_size_(data_size), bytes_read_(0) {}
 
   ~net_stream() = default;
 
-  std::tuple<bool, net_stream_pointer, net_stream_pointer> read(
+  std::tuple<bool, const_net_stream_pointer, const_net_stream_pointer> read(
       size_t byte_count) {
     if ((data_size_ - bytes_read_) < byte_count) {
       return std::make_tuple(false, nullptr, nullptr);
@@ -25,7 +28,7 @@ class net_stream {
     return std::tuple(true, start, data_);
   }
 
-  std::tuple<bool, net_stream_pointer> seek(size_t offset) {
+  std::tuple<bool, const_net_stream_pointer> seek(size_t offset) {
     if (data_size_ < offset) {
       return std::make_tuple(false, nullptr);
     }
@@ -37,7 +40,7 @@ class net_stream {
   size_t get_bytes_read() const { return bytes_read_; }
 
  private:
-  net_stream_pointer data_;
+  const_net_stream_pointer data_;
   const size_t data_size_;
   size_t bytes_read_;
 };
